@@ -10,16 +10,16 @@ def mover_asteroide(asteroide: Asteroide, ancho: int, alto: int)-> Asteroide:
     elif nuevo_x > ancho:
         nuevo_x = 0
 
-        if nuevo_y < 0:
-            nuevo_y = alto
-        elif nuevo_y > alto:
-            nuevo_y = 0
-
-            return replace(
-                asteroide,
-                x=nuevo_x,
-                y=nuevo_y
-            )
+    if nuevo_y < 0:
+        nuevo_y = alto
+    elif nuevo_y > alto:
+        nuevo_y = 0
+        
+    return replace(
+        asteroide,         
+        x=nuevo_x,
+        y=nuevo_y
+    )
 
 def update_secuencial(state: GameState) -> GameState:
     nuevos_asteroides = tuple(
@@ -29,6 +29,6 @@ def update_secuencial(state: GameState) -> GameState:
 
     return replace(
         state,
-        Asteroide=nuevos_asteroides,
+        asteroides=nuevos_asteroides,
         frame=state.frame +1
     )
