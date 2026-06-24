@@ -3,13 +3,31 @@ import pygame
 from models import GameState
 
 
+def obtener_color_asteroide(radio: int) -> tuple:
+	"""Retorna color RGB basado en el tamaño del asteroide."""
+	# Escalar radio (4-10) a valores RGB
+	# Pequeños: más claros, Grandes: más oscuros
+	normalized = (radio - 4) / 6  # Normalizar a 0-1
+	
+	# Crear gradiente: claro → medio → oscuro
+	if normalized < 0.5:
+		# Gradiente de gris claro a medio
+		gray = int(220 - (normalized * 2) * 50)
+		return (gray, gray, gray)
+	else:
+		# Gradiente de gris medio a tonos cálidos
+		gray = int(170 - ((normalized - 0.5) * 2) * 50)
+		return (gray + 50, gray, gray)
+
+
 def dibujar_estado(superficie, estado: GameState):
 	superficie.fill((10, 10, 20))
 
 	for asteroide in estado.asteroides:
+		color = obtener_color_asteroide(asteroide.radio)
 		pygame.draw.circle(
 			superficie,
-			(200, 200, 200),
+			color,
 			(int(asteroide.x), int(asteroide.y)),
 			asteroide.radio,
 		)
