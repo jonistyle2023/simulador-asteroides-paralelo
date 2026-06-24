@@ -1,6 +1,7 @@
 import pygame
+from dataclasses import replace
 
-from models import GameState
+from models import GameState, Nave
 
 
 def obtener_color_asteroide(radio: int) -> tuple:
@@ -18,6 +19,35 @@ def obtener_color_asteroide(radio: int) -> tuple:
 		# Gradiente de gris medio a tonos cálidos
 		gray = int(170 - ((normalized - 0.5) * 2) * 50)
 		return (gray + 50, gray, gray)
+
+
+def mover_nave(nave: Nave, estado: GameState) -> Nave:
+	"""Actualiza la posición de la nave según las teclas presionadas."""
+	teclas = pygame.key.get_pressed()
+	
+	nueva_x = nave.x
+	nueva_y = nave.y
+	velocidad = nave.velocidad
+	
+	# Controles con WASD y Flechas
+	# Arriba
+	if teclas[pygame.K_w] or teclas[pygame.K_UP]:
+		nueva_y -= velocidad
+	# Abajo
+	if teclas[pygame.K_s] or teclas[pygame.K_DOWN]:
+		nueva_y += velocidad
+	# Izquierda
+	if teclas[pygame.K_a] or teclas[pygame.K_LEFT]:
+		nueva_x -= velocidad
+	# Derecha
+	if teclas[pygame.K_d] or teclas[pygame.K_RIGHT]:
+		nueva_x += velocidad
+	
+	# Limitar movimiento dentro de los límites de la pantalla
+	nueva_x = max(nave.radio, min(nueva_x, estado.ancho - nave.radio))
+	nueva_y = max(nave.radio, min(nueva_y, estado.alto - nave.radio))
+	
+	return replace(nave, x=nueva_x, y=nueva_y)
 
 
 def dibujar_estado(superficie, estado: GameState):
@@ -70,7 +100,12 @@ def ejecutar_juego(estado_inicial: GameState, actualizar_estado):
 				ejecutando = False
 
 		if not estado.game_over:
-			estado = actualizar_estado(estado)
+			# Actualizar posición de la nave según entrada
+			nueva_nave = mover_nave(estado.nave, estado)
+			estado_con_nave_actualizada = replace(estado, nave=nueva_nave)
+			
+			# Actualizar asteroides y colisiones
+			estado = actualizar_estado(estado_con_nave_actualizada)
 
 		dibujar_estado(pantalla, estado)
 		pygame.display.flip()
