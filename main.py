@@ -2,6 +2,8 @@ import random
 from multiprocessing import freeze_support
 
 from models import Asteroide, Nave, GameState
+from parallel_engine import update_paralelo
+from render import ejecutar_juego
 
 
 def crear_asteroides(cantidad: int, ancho: int, alto: int):
@@ -39,4 +41,4 @@ def crear_estado(cantidad_asteroides: int) -> GameState:
 if __name__ == "__main__":
     freeze_support()
     estado = crear_estado(1000)
-    print("Estado inicial creado:", estado.frame)
+    ejecutar_juego(estado, update_paralelo)
