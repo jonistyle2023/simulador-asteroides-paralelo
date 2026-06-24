@@ -14,12 +14,19 @@ def dibujar_estado(superficie, estado: GameState):
 			asteroide.radio,
 		)
 
-	pygame.draw.circle(
-		superficie,
-		(80, 180, 255),
-		(int(estado.nave.x), int(estado.nave.y)),
-		estado.nave.radio,
-	)
+	# Dibujar nave como triángulo
+	nave_x = int(estado.nave.x)
+	nave_y = int(estado.nave.y)
+	radio = estado.nave.radio
+	
+	# Vértices del triángulo (punta arriba)
+	vertices = [
+		(nave_x, nave_y - radio),           # Punta arriba
+		(nave_x - radio, nave_y + radio),   # Esquina inferior izquierda
+		(nave_x + radio, nave_y + radio)    # Esquina inferior derecha
+	]
+	
+	pygame.draw.polygon(superficie, (80, 180, 255), vertices)
 
 	if estado.game_over:
 		fuente = pygame.font.SysFont(None, 48)
