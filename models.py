@@ -27,3 +27,5 @@ class GameState:
     alto: int
     game_over: bool
     frame: int
+    workers: int = 1
+    modo: str = "Secuencial"

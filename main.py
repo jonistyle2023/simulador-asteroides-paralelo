@@ -19,7 +19,7 @@ def crear_asteroides(cantidad: int, ancho: int, alto: int):
     )
 
 
-def crear_estado(cantidad_asteroides: int) -> GameState:
+def crear_estado(cantidad_asteroides: int, workers: int, modo: str) -> GameState:
     ancho = 900
     alto = 600
 
@@ -34,11 +34,13 @@ def crear_estado(cantidad_asteroides: int) -> GameState:
         ancho=ancho,
         alto=alto,
         game_over=False,
-        frame=0
+        frame=0,
+        workers=workers,
+        modo=modo
     )
 
 
 if __name__ == "__main__":
     freeze_support()
-    estado = crear_estado(1000)
+    estado = crear_estado(5000, 8, "Paralelo")
     ejecutar_juego(estado, update_paralelo)

@@ -50,7 +50,21 @@ def mover_nave(nave: Nave, estado: GameState) -> Nave:
 	return replace(nave, x=nueva_x, y=nueva_y)
 
 
-def dibujar_estado(superficie, estado: GameState):
+def dibujar_info_tecnica(superficie, estado: GameState, reloj):
+    fuente = pygame.font.SysFont(None, 24)
+    info = [
+        f"FPS: {reloj.get_fps():.0f}",
+        f"Entidades: {len(estado.asteroides)}",
+        f"Workers: {estado.workers}",
+        f"Modo: {estado.modo}"
+    ]
+    
+    for i, linea in enumerate(info):
+        texto = fuente.render(linea, True, (255, 255, 255))
+        superficie.blit(texto, (10, 10 + i * 20))
+
+
+def dibujar_estado(superficie, estado: GameState, reloj):
 	superficie.fill((10, 10, 20))
 
 	for asteroide in estado.asteroides:
@@ -81,6 +95,8 @@ def dibujar_estado(superficie, estado: GameState):
 		texto = fuente.render("GAME OVER", True, (255, 80, 80))
 		rect = texto.get_rect(center=(estado.ancho // 2, estado.alto // 2))
 		superficie.blit(texto, rect)
+	else:
+		dibujar_info_tecnica(superficie, estado, reloj)
 
 
 def ejecutar_juego(estado_inicial: GameState, actualizar_estado):
@@ -107,7 +123,7 @@ def ejecutar_juego(estado_inicial: GameState, actualizar_estado):
 			# Actualizar asteroides y colisiones
 			estado = actualizar_estado(estado_con_nave_actualizada)
 
-		dibujar_estado(pantalla, estado)
+		dibujar_estado(pantalla, estado, reloj)
 		pygame.display.flip()
 		reloj.tick(60)
 
